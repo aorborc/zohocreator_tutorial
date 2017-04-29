@@ -1,0 +1,568 @@
+/*
+ * Author       : aorborctechnologies
+ * Generated on : 29-Apr-2017 16:29:25 PDT
+ * Version      : 3.0
+ */
+application "Subforms in Zoho Creator"
+{
+    date format = "dd-MMM-yyyy"
+    time zone = "Asia/Calcutta"
+    section Invoice_Form
+    {
+        displayname = "Invoice Form"
+        form  Invoice_Form
+        {
+            displayname  =  "Invoice Form"
+            success message  =  "Data Added Successfully!"
+            field alignment = left
+            
+            Customer_Name
+            (
+                displayname  =  "Customer Name"
+                type  =  text
+                width  =  200px
+            )
+
+            Invoice_Number
+            (
+                displayname  =  "Invoice Number"
+                type  =  autonumber
+                start index  =  1
+            )
+
+            Line_Items
+            (
+                displayname  =  "Line Items"
+                type  =  grid
+                values  =  Invoice_Lines.ID
+                Price
+                (
+                    on user input
+                    {
+                        row.Total = (row.Price  *  row.Qty);
+                        //for each record
+                        temp_total = 0.0;
+                        for each row_rec in Line_Items
+                        {
+                            temp_total = (temp_total  +  row_rec.Total);
+                        }
+                        input.Total = temp_total;
+                    }
+                )
+            )
+
+            Total
+            (
+                type  =  USD
+                width  =  200px
+            )
+
+            actions
+            {
+                on add
+                {
+                    submit
+                    (
+                        type  =  submit
+                        displayname  =  "Submit"
+                        PreSubmit = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><preoncommit><openurl/><successmsg><type><![CDATA[sucmsgtimeout]]></type><value><![CDATA[Data Added Successfully!]]></value><timeout><![CDATA[2]]></timeout></successmsg></preoncommit>"
+                    )
+                    reset
+                    (
+                        type  =  reset
+                        displayname  =  "Reset"
+                    )
+                }
+                on edit
+                {
+                    update
+                    (
+                        type  =  submit
+                        displayname  =  "Update"
+                    )
+                    cancel
+                    (
+                        type  =  cancel
+                        displayname  =  "Cancel"
+                    )
+                }
+            }
+                        record summary
+            {
+                Invoice_Summary as "Invoice Summary"
+                {
+                    content = {"layout":"1","pageNumberOption":"null","orientation":"portrait","isFooterEnabled":true,"footer":{"elements":[],"style":""},"mainLayout":[{"elements":[{"type":"columns","element":{"split":"100","id":"elem_15a3a10cb0c1","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"Fields":[{"Label_Name":"Customer_Name"}],"id":"elem_15a3a10cb0c","content":"<div><link rel=\"stylesheet\"><\/link> <style>*.ruben {\n\ttext-align: right;\n}\n<\/style> <p>Bill To:   <br />   <br />   <span>     <span>${Customer_Name}<\/span>   <\/span>   <br /> <\/p><\/div><div style=\"\" class=\"_e725ae-textarea_btn _e725ae-show _e725ae-field_hovered\"><div class=\"_e725ae-transform_wrap\"><div title=\"Protected by Grammarly\" class=\"_e725ae-status\">&nbsp;<\/div><\/div><\/div>"}}]}]}},{"type":"columns","element":{"split":"100","id":"elem_15a3a12261a1","elemStyle":"","collayouts":[{"colElements":[{"id":"elem_1487035214924","type":"lookupfields","element":{"valueStyle":"width: 50%;","valueTextStyle":"","fieldLayoutType":"1","related_Form":"Invoice_Lines","labelText":"Line Items","wrapperStyle":"","labelStyle":"width: 50%; display: none;","Label_Name":"Line_Items","refFields":[{"valueStyle":"    ","fieldLayoutType":"2","labelText":"Item Name","labelStyle":"    ","Label_Name":"Item_Name"},{"valueStyle":"    ","fieldLayoutType":"2","labelText":"Description","labelStyle":"    ","Label_Name":"Description"},{"valueStyle":"    ","fieldLayoutType":"2","labelText":"Qty","labelStyle":"    ","Label_Name":"Qty"},{"valueStyle":"    ","fieldLayoutType":"2","labelText":"Price","labelStyle":"    ","Label_Name":"Price"},{"valueStyle":"    ","fieldLayoutType":"2","labelText":"Total","labelStyle":"    ","Label_Name":"Total"}],"labelTextStyle":""}},{"id":"elem_1487035214924","type":"fields","element":{"valueStyle":"width: 50%;","valueTextStyle":"text-align: right;","fieldLayoutType":"2","labelText":"Total","wrapperStyle":"","labelStyle":"width: 50%;","Label_Name":"Total","labelTextStyle":"text-align: right;"}}]}]}},{"type":"columns","element":{"split":"100","id":"elem_15a3a12c11c1","elemStyle":"","collayouts":[{"colElements":[]}]}}],"id":1}],"resize":"default","header":{"elements":[{"type":"text","element":{"id":"elem_15a3a23f110","fields":[{"formCompId":"1853690000020099874"}],"content":"<div><h1 style=\"text-align: center;\">Invoice #:&nbsp;<span><span>${1853690000020099874}<\/span><\/span><\/h1><\/div>"}}],"style":""},"templateStyle":"text-align: left; width: 100%; margin: 0 auto;","isHeaderEnabled":true}
+                }
+                Bootstrap_Template as "Bootstrap Template"
+                {
+                    content = {"layout":"1","pageNumberOption":"null","orientation":"null","isFooterEnabled":false,"mainLayout":[{"elements":[{"type":"text","element":{"id":"elem_15a3a2a598b","fields":[],"content":"<div><p>   <style>html {\n\tfont-family: sans-serif;\n\tline-height: 1.15;\n}\nbody {\n\tmargin: 0;\n}\narticle, aside, footer, header, nav, section {\n\tdisplay: block;\n}\nh1 {\n\tfont-size: 2.0em;\n\tmargin: 0.67em 0;\n}\nfigcaption, figure, main {\n\tdisplay: block;\n}\nfigure {\n\tmargin: 1.0em 40.0px;\n}\nhr {\n\theight: 0;\n\toverflow: visible;\n}\npre {\n\tfont-family: monospace , monospace;\n\tfont-size: 1.0em;\n}\na {\n\tbackground-color: transparent;\n}\na:active, a:hover {\n\toutline-width: 0;\n}\nb, strong {\n\tfont-weight: inherit;\n}\nb, strong {\n\tfont-weight: bolder;\n}\ncode, kbd, samp {\n\tfont-family: monospace , monospace;\n\tfont-size: 1.0em;\n}\ndfn {\n\tfont-style: italic;\n}\nmark {\n\tbackground-color: rgb(255,255,0);\n\tcolor: rgb(0,0,0);\n}\nsmall {\n\tfont-size: 80.0%;\n}\nsub, sup {\n\tfont-size: 75.0%;\n\tline-height: 0;\n\tvertical-align: baseline;\n}\nsub {\n\tbottom: -0.25em;\n}\nsup {\n\ttop: -0.5em;\n}\naudio, video {\n}\n<\/style> <\/p><\/div>"}},{"type":"columns","element":{"split":"50,50","id":"elem_15a3a2dab1e1","elemStyle":"","collayouts":[{"colElements":[{"type":"text","element":{"id":"elem_15a3a2dab1f","fields":[],"content":"<div><p>Your content goes here ..<\/p><\/div>"}}]},{"colElements":[{"type":"text","element":{"id":"elem_15a3a2dab1f","fields":[],"content":"<div><p>Your content goes here ..<\/p><\/div>"}}]}]}}],"id":1}],"resize":"default","templateStyle":"text-align: left; width: 100%; margin: 0 auto;","isHeaderEnabled":false}
+                }
+            }
+        }
+
+        list  Invoice_Form_Report
+        {
+            displayname = "Invoice Form Report"
+            template = Invoice_Summary
+            show  all  rows  from  Invoice_Form 
+            (
+                Customer_Name as "Customer Name"
+                Invoice_Number as "Invoice Number"
+                Total
+                Line_Items.Item_Name as "Line Items"
+                (
+                    view = Invoice_Lines_Report
+                )
+                Line_Items.Qty as "Line Items.Qty"
+                Line_Items.Price as "Line Items.Price"
+                Line_Items.Total as "Line Items.Total"
+                Added_Time as "Added Time"
+            )
+            options
+            (
+                menu alignment = left and right
+            )
+        }
+
+        form  Invoice_Lines
+        {
+            displayname  =  "Invoice Lines"
+            success message  =  "Data Added Successfully!"
+            field alignment = left
+            
+            Invoice_Link_2
+            (
+                displayname  =  "Invoice Link 2"
+                type  =  picklist
+                values  =  Invoice_Form.ID
+                bidirectional = Line_Items
+                displayformat = [ Customer_Name ]
+                sortorder  =  ascending
+                searchable  =  true
+                width  =  200px
+            )
+
+            Item_Name
+            (
+                displayname  =  "Item Name"
+                type  =  text
+                width  =  200px
+            )
+
+            Description
+            (
+                type  =  textarea
+                height  =  100px
+                width  =  200px
+            )
+
+            Qty
+            (
+                type  =  number
+                width  =  200px
+            )
+
+            Price
+            (
+                type  =  USD
+                width  =  200px
+            )
+
+            Total
+            (
+                type  =  USD
+                width  =  200px
+            )
+
+            actions
+            {
+                on add
+                {
+                    submit
+                    (
+                        type  =  submit
+                        displayname  =  "Submit"
+                    )
+                    reset
+                    (
+                        type  =  reset
+                        displayname  =  "Reset"
+                    )
+                }
+                on edit
+                {
+                    update
+                    (
+                        type  =  submit
+                        displayname  =  "Update"
+                    )
+                    cancel
+                    (
+                        type  =  cancel
+                        displayname  =  "Cancel"
+                    )
+                }
+            }
+                    }
+
+        list  Invoice_Lines_Report
+        {
+            displayname = "Invoice Lines Report"
+            show  all  rows  from  Invoice_Lines 
+            (
+                Item_Name as "Item Name"
+                Description
+                Qty
+                Price
+                Total
+                (
+                    display = total
+                )
+                Invoice_Link_2 as "Invoice Link 2"
+            )
+            group by
+            (
+                properties
+                (
+                    display record count = true
+                )
+                Invoice_Link_2   ascending
+            )
+            options
+            (
+                menu alignment = left and right
+            )
+        }
+
+    }
+
+    section Interfaces
+    {
+        htmlpage Simple_Page(my_parameter)
+displayname = "Simple Page"
+content
+        <%{
+            //some deluge scripts
+            if (input.my_parameter  ==  "hello")
+            {
+                input.my_parameter = "Hello World!";
+            }%>            <!DOCTYPE html>
+  <html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    </head>
+    <body>
+      <h1><%=my_parameter%></h1>
+    </body>
+  </html>        <%}%>
+
+        htmlpage Invoice_Template(inv_no)
+displayname = "Invoice Template"
+content
+        <%{
+            inv_no_int = input.inv_no.toLong();
+            inv_obj  =  Invoice_Form  [ID == inv_no_int];%>            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css?family=Work+Sans:700" rel="stylesheet">
+<div class="container mr-auto ml-auto p-2 mt-2">
+	<nav class="hidden-print">
+		<div class="d-flex justify-content-end">
+			<div class="mr-auto p-2">
+				<h1>
+					Invoice Details
+				</h1>
+				<span class="well">
+					This invoice was created on <%=inv_obj.Added_Time%> <!-- Mar 20, 2017 at 8:03 AM PDT -->
+				</span>
+			</div>
+			<div class="p-2">
+				<a target="_blank" href="<%=zoho.appuri%>print/Invoice_Template" class="btn btn-sm btn-success">Print/Pdf</a>
+			</div>
+		</div>
+	</nav>
+	<div class="d-flex justify-content-end">
+		<div class="mr-auto">
+			<div class="businessLogo">
+				<img border="0" alt="" src="http://www.aorborc.com/media/themes/impulso/img/logo.png">
+			</div>
+			<div class="d-flex flex-column">
+				<div class="p-2">
+					<h6>
+						AORBORC TECHNOLOGIES PRIVATE LIMITED
+					</h6>
+				</div>
+				<div class="p-2">
+					Ruban Kannan
+				</div>
+				<div class="p-2">
+					<address>
+						G1, Block 5
+						Chennai, Tamil Nadu 600001
+						India
+					</address>
+				</div>
+				<div class="p-2">
+					Phone: +91 9841111111<br>accounts@aorborc.com<br>www.aorborc.com<br>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex flex-column">
+			<div class="d-flex flex-column">
+				<div class="p-2">
+					<h6>
+						INVOICE
+					</h6>
+				</div>
+				<div class="p-2">
+					Paid
+				</div>
+				<div class="d-flex flex-row">
+					<div class="p-2">
+						Invoice #:
+					</div>
+					<div class="p-2">
+						<%=inv_obj.Invoice_Number%>
+					</div>
+				</div>
+				<div class="d-flex flex-row">
+					<div class="p-2">
+						Invoice date:
+					</div>
+					<div class="p-2">
+						<%=inv_obj.Added_Time%>
+					</div>
+				</div>
+				<div class="d-flex flex-row">
+					<div class="p-2">
+						Reference:
+					</div>
+					<div class="p-2">
+						PO1003170001
+					</div>
+				</div>
+				<div class="d-flex flex-row">
+					<div class="p-2">
+						Due date:
+					</div>
+					<div class="p-2">
+						<%=inv_obj.Added_Time.addMonth(1)%>
+					</div>
+				</div>
+				<div class="d-flex flex-row">
+					<div class="p-2">
+						Amount due:
+					</div>
+					<div class="p-2">
+						$ <%=inv_obj.Total%>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="d-flex">
+		<div class="mr-auto p-2">
+			<div>
+				Attn:
+			</div>
+			<div class="d-flex flex-column">
+				<div class="p-2">
+					<h6>
+						DORERF CONSTRUCTIONS LLC
+					</h6>
+				</div>
+				<div class="p-2">
+					<%=inv_obj.Customer_Name%> 
+				</div>
+				<div class="p-2">
+					<address>
+						G1, Block 5
+						New york, NY, 10001
+						USA
+					</address>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="d-flex flex-column">
+		<div class="d-flex flex-row mb-1 line-2">
+			<div class="mr-auto p2 t-header col-3">
+				<span>
+					Item
+				</span>
+			</div>
+			<div class="mr-auto p2 t-header col-3">
+				<span>
+					Description
+				</span>
+			</div>
+			<div class="mr-auto p2 t-header col-2">
+				<span>
+					Qty
+				</span>
+			</div>
+			<div class="mr-auto p2 t-header col-2">
+				<span>
+					Price
+				</span>
+			</div>
+			<div class="mr-auto p2 t-header col-2">
+				<span>
+					Total
+				</span>
+			</div>
+		</div><%//for each records task
+            for each invoice_lines_obj in Invoice_Lines  [Invoice_Link_2 == inv_no_int]
+            {%>                <div class="d-flex flex-row">
+				<div class="mr-auto p2 t-body col-3">
+					<span>
+						<%=invoice_lines_obj.Item_Name%>
+					</span>
+				</div>
+				<div class="mr-auto p2 t-body col-3">
+					<span>
+						<%=invoice_lines_obj.Description%>
+					</span>
+				</div>
+				<div class="mr-auto p2 t-body col-2">
+					<span>
+						<%=invoice_lines_obj.Qty%>
+					</span>
+				</div>
+				<div class="mr-auto p2 t-body col-2">
+					<span>
+						$ <%=invoice_lines_obj.Price%>
+					</span>
+				</div>
+				<div class="mr-auto p2 t-body col-2">
+					<span>
+						$ <%=invoice_lines_obj.Total%>
+					</span>
+				</div>
+			</div>            <%}%>            <div class="d-flex flex-row mr-0 pr-0 mt-1 total-wrapper">
+			<div class="col-6">
+			</div>
+			<div class="col-6 d-flex flex-row mr-0 pr-0">
+				<div class="t-header col-6">
+					<span>
+						Vat (15%)
+					</span>
+				</div>
+				<div class="t-body col-6">
+					<span>
+						$ <%=(inv_obj.Total*0.15).round(2)%>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex flex-row mr-0 pr-0 mt-1 total-wrapper">
+			<div class="col-6">
+			</div>
+			<div class="col-6 d-flex flex-row mr-0 pr-0">
+				<div class="t-header col-6">
+					<span>
+						Shipping charges
+					</span>
+				</div>
+				<div class="t-body col-6">
+					<span>
+						$ 100.00
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex flex-row mr-0 pr-0 mt-1 total-wrapper">
+			<div class="col-6">
+			</div>
+			<div class="col-6 d-flex flex-row mr-0 pr-0">
+				<div class="t-header col-6">
+					<span>
+						Discount (5%)
+					</span>
+				</div>
+				<div class="t-body col-6">
+					<span>
+						$ <%=(inv_obj.Total*0.05).round(2)%>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div class="d-flex flex-row mr-0 pr-0 mt-1 total-wrapper">
+			<div class="col-6">
+			</div>
+			<div class="col-6 d-flex flex-row mr-0 pr-0">
+				<div class="t-header col-6">
+					<span>
+						Total
+					</span>
+				</div>
+				<div class="t-body col-6">
+					<span>
+						$ <%=100+inv_obj.Total+(inv_obj.Total*0.15).round(2)-(inv_obj.Total*0.05).round(2)%>
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style type="text/css">
+	.btn{
+		text-shadow: none;
+	}
+	.container *{
+		font-family: 'Work Sans', sans-serif;
+		max-width: 1080px !important;
+	}
+	.line-2{
+		line-height: 2;
+	}
+	.t-header{
+		background-color: #bdc3c7;
+		color: white;
+		font-weight: 300;
+	}
+	.t-body{
+		background-color: #ecf0f1;
+	}
+	.total-wrapper .t-body{
+		text-align: right;
+	}
+</style>        <%}%>
+
+    }
+
+    customize
+    {
+        layout = "tab"
+        base theme = "professional"
+        color = "black"
+        new theme = 1
+    }
+    share_settings
+    {
+		"Administrator"
+		{
+			name = "Administrator"
+			type = Users_Permissions
+			permissions = {Chat:true, Predefined:true}
+
+		}
+		"Member"
+		{
+			name = "Member"
+			type = Users_Permissions
+			permissions = {Chat:false, Predefined:true}
+
+		}
+		"User"
+		{
+			name = "User"
+			type = Users_Permissions
+			permissions = {Chat:false, Predefined:true}
+
+		}
+    }
+}
