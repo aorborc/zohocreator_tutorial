@@ -254,6 +254,7 @@ inv_obj = Invoice_Form [ID == inv_no_int];
 		</div>
 	</div>
 </div>
+
 <style type="text/css">
 	.btn{
 		text-shadow: none;

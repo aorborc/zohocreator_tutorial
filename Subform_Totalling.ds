@@ -1,0 +1,302 @@
+/*
+ * Author       : aorborctechnologies
+ * Generated on : 03-May-2017 12:56:54 PDT
+ * Version      : 3.0
+ */
+application "Subform Totalling"
+{
+    date format = "dd-MMM-yyyy"
+    time zone = "US/Central"
+    section Item
+    {
+        form  Item
+        {
+            success message  =  "Data Added Successfully!"
+            field alignment = left
+            
+            Name
+            (
+                type  =  text
+                width  =  200px
+            )
+
+            Price
+            (
+                type  =  USD
+                width  =  200px
+            )
+
+            actions
+            {
+                on add
+                {
+                    submit
+                    (
+                        type  =  submit
+                        displayname  =  "Submit"
+                        PreSubmit = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><preoncommit><openurl/><successmsg><type><![CDATA[sucmsgtimeout]]></type><value><![CDATA[Data Added Successfully!]]></value><timeout><![CDATA[2]]></timeout></successmsg></preoncommit>"
+                    )
+                    reset
+                    (
+                        type  =  reset
+                        displayname  =  "Reset"
+                    )
+                }
+                on edit
+                {
+                    update
+                    (
+                        type  =  submit
+                        displayname  =  "Update"
+                    )
+                    cancel
+                    (
+                        type  =  cancel
+                        displayname  =  "Cancel"
+                    )
+                }
+            }
+                    }
+
+        list  Item_Report
+        {
+            displayname = "Item Report"
+            show  all  rows  from  Item 
+            (
+                Name
+                Price
+            )
+            options
+            (
+                menu alignment = left and right
+            )
+        }
+
+        form  Subform_Lines
+        {
+            displayname  =  "Subform Lines"
+            success message  =  "Data Added Successfully!"
+            field alignment = left
+            
+            SubForm_Invoice
+            (
+                displayname  =  "SubForm Invoice"
+                type  =  picklist
+                values  =  SubForm_Invoice.ID
+                bidirectional = Line_Items
+                displayformat = [ ID ]
+                sortorder  =  ascending
+                searchable  =  true
+                width  =  200px
+            )
+
+            Item
+            (
+                type  =  picklist
+                values  =  Item.ID
+                displayformat = [ Name ]
+                allow new entries = true
+                [
+                    displayname = "Add New"
+                ]
+                sortorder  =  ascending
+                searchable  =  true
+                width  =  200px
+            )
+
+            Item_Price
+            (
+                displayname  =  "Item Price"
+                type  =  USD
+                width  =  200px
+            )
+
+            Qty
+            (
+                type  =  number
+                width  =  200px
+            )
+
+            Item_Subtotal
+            (
+                displayname  =  "Item Subtotal"
+                type  =  USD
+                width  =  200px
+            )
+
+            actions
+            {
+                on add
+                {
+                    submit
+                    (
+                        type  =  submit
+                        displayname  =  "Submit"
+                    )
+                    reset
+                    (
+                        type  =  reset
+                        displayname  =  "Reset"
+                    )
+                }
+                on edit
+                {
+                    update
+                    (
+                        type  =  submit
+                        displayname  =  "Update"
+                    )
+                    cancel
+                    (
+                        type  =  cancel
+                        displayname  =  "Cancel"
+                    )
+                }
+            }
+                    }
+
+        list  Subform_Lines_Report
+        {
+            displayname = "Subform Lines Report"
+            show  all  rows  from  Subform_Lines 
+            (
+                Item
+                Item_Price as "Item Price"
+                Qty
+                Item_Subtotal as "Item Subtotal"
+                SubForm_Invoice as "SubForm Invoice"
+            )
+            options
+            (
+                menu alignment = left and right
+            )
+        }
+
+        form  SubForm_Invoice
+        {
+            displayname  =  "SubForm Invoice"
+            success message  =  "Data Added Successfully!"
+            field alignment = left
+            
+            Line_Items
+            (
+                displayname  =  "Line Items"
+                type  =  grid
+                values  =  Subform_Lines.ID
+                Item
+                (
+                    on user input
+                    {
+                        item_obj  =  Item  [ID == row.Item];
+                        row.Item_Price = item_obj.Price;
+                        row.Qty = ifnull(row.Qty,1);
+                        row.Item_Subtotal = (ifnull(item_obj.Price,0.0)  *  ifnull(row.Qty,1));
+                        temp_total = 0.0;
+                        for each item_rec in Line_Items
+                        {
+                            temp_total = (temp_total  +  ifnull(item_rec.Item_Subtotal,0.0));
+                        }
+                        input.Total = temp_total;
+                    }
+                )
+                Qty
+                (
+                    on user input
+                    {
+                        item_obj  =  Item  [ID == row.Item];
+                        row.Item_Price = item_obj.Price;
+                        row.Item_Subtotal = (ifnull(item_obj.Price,0.0)  *  ifnull(row.Qty,1));
+                        temp_total = 0.0;
+                        for each item_rec in Line_Items
+                        {
+                            temp_total = (temp_total  +  ifnull(item_rec.Item_Subtotal,0.0));
+                        }
+                        input.Total = temp_total;
+                    }
+                )
+            )
+
+            Total
+            (
+                type  =  USD
+                width  =  200px
+            )
+
+            actions
+            {
+                on add
+                {
+                    submit
+                    (
+                        type  =  submit
+                        displayname  =  "Submit"
+                    )
+                    reset
+                    (
+                        type  =  reset
+                        displayname  =  "Reset"
+                    )
+                }
+                on edit
+                {
+                    update
+                    (
+                        type  =  submit
+                        displayname  =  "Update"
+                    )
+                    cancel
+                    (
+                        type  =  cancel
+                        displayname  =  "Cancel"
+                    )
+                }
+            }
+                    }
+
+        list  SubForm_Invoice_Report
+        {
+            displayname = "SubForm Invoice Report"
+            show  all  rows  from  SubForm_Invoice 
+            (
+                Total
+            )
+            options
+            (
+                menu alignment = left and right
+            )
+        }
+
+    }
+
+    customize
+    {
+        layout = "tab"
+        base theme = "professional"
+        color = "black"
+        new theme = 1
+    }
+    share_settings
+    {
+		"Administrator"
+		{
+			name = "Administrator"
+			type = Users_Permissions
+			permissions = {Chat:true, Predefined:true}
+
+		}
+		"Member"
+		{
+			name = "Member"
+			type = Users_Permissions
+			permissions = {Chat:false, Predefined:true}
+
+		}
+		"User"
+		{
+			name = "User"
+			type = Users_Permissions
+			permissions = {Chat:false, Predefined:true}
+
+		}
+    }
+}
